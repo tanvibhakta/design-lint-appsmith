@@ -4,7 +4,8 @@ import {
   checkFills,
   checkStrokes,
   checkType,
-  checkContrast
+  checkContrast,
+  checkIfIconIsNotGray5
   // customCheckTextFills,
   // uncomment this as an example of a custom lint function ^
 } from "./lintingFunctions";
@@ -409,6 +410,9 @@ figma.ui.onmessage = msg => {
 
   function lintVectorRules(node) {
     let errors = [];
+
+    // Custom
+    checkIfIconIsNotGray5(node, errors);
 
     // This can be enabled by the user in settings.
     if (lintVectors === true) {

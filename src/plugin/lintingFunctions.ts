@@ -403,6 +403,25 @@ export function checkContrast(node, errors) {
   });
 }
 
+export function checkIfIconIsNotGray5(node, errors) {
+  const GRAY_5 = {
+    r: "106",
+    g: "117",
+    b: "133"
+  };
+  const currentColor = convertColor(node.fills[0].color);
+  if (!_.isEqual(currentColor, GRAY_5)) {
+    return errors.push(
+      createErrorObject(
+        node, // Node object we use to reference the error (id, layer name, etc)
+        "fill", // Type of error (fill, text, effect, etc)
+        // Large text to indicate what the error is.
+        "Icon color mismatch. Use Gray-5 instead."
+      )
+    );
+  }
+}
+
 // Utility functions for color conversion.
 const convertColor = color => {
   const colorObj = color;
