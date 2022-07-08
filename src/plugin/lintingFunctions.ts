@@ -1,6 +1,8 @@
 // Linting functions
 
 // Generic function for creating an error object to pass to the app.
+import * as _ from "lodash";
+
 export function createErrorObject(node, type, message, value?) {
   let error = {
     message: "",
@@ -347,6 +349,58 @@ export function checkType(node, errors) {
   } else {
     return;
   }
+}
+
+export function checkContrast(node, errors) {
+  const COLOR = {
+    GRAY_0: {
+      r: "248",
+      g: "250",
+      b: "252"
+    },
+    GRAY_1: {
+      r: "241",
+      g: "245",
+      b: "249"
+    },
+    GRAY_2: {
+      r: "227",
+      g: "232",
+      b: "239"
+    },
+    GRAY_3: {
+      r: "205",
+      g: "213",
+      b: "223"
+    },
+    GRAY_4: {
+      r: "153",
+      g: "164",
+      b: "179"
+    },
+    GRAY_5: {
+      r: "106",
+      g: "117",
+      b: "133"
+    }
+  };
+
+  const currentTextColor = convertColor(
+    node.getStyledTextSegments(["fills"])[0].fills[0].color
+  );
+  _.forOwn(COLOR, (value, key) => {
+    if (_.isEqual(currentTextColor, value)) {
+      return errors.push(
+        createErrorObject(
+          node, // Node object we use to reference the error (id, layer name, etc)
+          "fill", // Type of error (fill, text, effect, etc)
+          // Large text to indicate what the error is.
+          "This text layer uses a low contrast color. Use Gray-6 and above"
+          // Some linting functions use another function here to return a fill HEX value or a number.
+        )
+      );
+    }
+  });
 }
 
 // Utility functions for color conversion.
